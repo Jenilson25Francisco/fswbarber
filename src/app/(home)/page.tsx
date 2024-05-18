@@ -4,8 +4,13 @@ import { Header } from "@/components/header/header";
 import { InputField } from "./components/input/input";
 import { BookingItem } from "@/components/booking/booking-item";
 import { SectionTitle } from "@/components/sectiontitle/Section-Title";
+import { db } from "@/lib/prisma";
+import { BarbershopItem } from "./components/barbershop/barbershop-item";
 
-export default function Home() {
+export default async function Home() {
+
+  const barbershops = await db.barbershop.findMany({})
+
   return (
     <div>
       <Header />
@@ -23,6 +28,14 @@ export default function Home() {
       <div className="px-5 mt-6">
         <SectionTitle title="Agendamentos" />
         <BookingItem />
+      </div>
+      <div className="px-5 mt-6">
+        <SectionTitle title="Recomendados" />
+        <div className="flex gap-4 overflow-x-auto [&::-webkit-scroller]:hidden">
+          {barbershops.map((barbershop) => (
+            <BarbershopItem key={barbershop.id} barbershop={barbershop} />
+          ))}
+        </div>
       </div>
     </div>
   );
